@@ -9,7 +9,6 @@ import java.io.*;
 public class Simulator {
 
     // Main
-
     public static void main(String params[]) {
         // get input file
         if (params.length < 1) {
@@ -27,7 +26,6 @@ public class Simulator {
             return;
         }
 
-    //System.out.println(infile.getName());
         // read file
         try {
             String line = null;
@@ -36,7 +34,7 @@ public class Simulator {
                 int frames = Integer.valueOf(parts[0]);
                 String actions[] = parts[1].replaceAll("\\}|\\{", "").split(",");
 
-        //System.out.println(line);
+                //System.out.println(line);
                 ArrayList<Frame> buffer = new ArrayList<Frame>(frames);
                 int faults = 0;
                 int index = 0;
@@ -135,7 +133,6 @@ public class Simulator {
                                 newframe.setMod(true);
                             }
                             buffer.set(buffer.indexOf(f), newframe);
-//              System.out.println("In Buffer Already");
                             break;
                         }
                     }
@@ -149,67 +146,31 @@ public class Simulator {
                             Boolean modpass = false;
                             int init = index;
                             int count = 0;
-//              System.out.println("Entering Loop");
                             while (!buffer.contains(newframe)) {
-                                
+
                                 Frame f = buffer.get(index);
-//                                System.out.println("Frame " + f.id() + ", Ref = " + f.getRef() + ", Mod = " + f.getMod());
-                                
-                                if(!f.getRef() && !f.getMod()){
+                                if (!f.getRef() && !f.getMod()) {
                                     victim = f;
                                     buffer.set(index, newframe);
                                     scetime += (victim.getMod() ? 10 : 0);
                                     faults += 1;
-                                } else if (!f.getRef() && f.getMod() && count == 1){
+                                } else if (!f.getRef() && f.getMod() && count == 1) {
                                     victim = f;
                                     buffer.set(index, newframe);
                                     scetime += (victim.getMod() ? 10 : 0);
                                     faults += 1;
-                                }else if(count == 1) {
+                                } else if (count == 1) {
                                     f.setRef(false);
                                 }
-                                
+
                                 index = (index + 1) % frames;
                                 if (index == init) {
-                                    if(count == 1){
-                                         count = 0;
-                                    } else{
+                                    if (count == 1) {
+                                        count = 0;
+                                    } else {
                                         count = 1;
                                     }
                                 }
-                                
-//                                if(!f.getRef()){
-//                                    if((!f.getMod()) || (modpass)){
-//                                        victim = f;
-//                                        buffer.set(index, newframe);
-//                                        scetime += (victim.getMod() ? 10 : 0);
-//                                        faults += 1;
-//                                    }
-//                                } else {
-//                                    f.setRef(false);
-//                                }
-                                
-//                                if ((!f.getMod()) || (modpass)) {
-//                                    if (f.getRef()) {
-////                                        if(count >= 1){
-//                                            f.setRef(false);
-////                                        }
-//                                    } else {
-//                                        victim = f;
-//                                        buffer.set(index, newframe);
-//                                        scetime += (victim.getMod() ? 10 : 0);
-//                                        faults += 1;
-//                                    }
-//                                }
-//                                index = (index + 1) % frames;
-//                                if (index == init) {
-////                                    if(count >= 1){
-//                                        modpass = true; 
-////                                    }
-////                                     count++;
-//                                }
-                                
-                                
                             }
                         }
                     }
@@ -273,24 +234,38 @@ public class Simulator {
                             boolean refpass = false;
                             boolean modpass = false;
                             int init = index;
+                            int count = 0;
                             while (!buffer.contains(newframe)) {
+
                                 Frame f = buffer.get(index);
-                                if ((!f.getMod()) || modpass) {
-                                    if (f.getRef()) {
-                                        f.setRef(false);
-                                    } else {
-                                        victim = f;
-                                        buffer.set(index, newframe);
-                                        scetime += (f.getMod() ? 10 : 0);
-                                        faults += 1;
-                                    }
+                                if (!f.getRef() && !f.getMod()) {
+                                    victim = f;
+                                    buffer.set(index, newframe);
+                                    scetime += (victim.getMod() ? 10 : 0);
+                                    faults += 1;
+                                } else if (f.getRef() && !f.getMod() && count == 1) {
+                                    victim = f;
+                                    buffer.set(index, newframe);
+                                    scetime += (victim.getMod() ? 10 : 0);
+                                    faults += 1;
+                                } else if (!f.getRef() && f.getMod() && count == 2) {
+                                    victim = f;
+                                    buffer.set(index, newframe);
+                                    scetime += (victim.getMod() ? 10 : 0);
+                                    faults += 1;
+                                } else if (count >= 1) {
+                                    f.setRef(false);
                                 }
+
                                 index = (index + 1) % frames;
                                 if (index == init) {
-                                    if (refpass) {
-                                        modpass = true;
+                                    if (count == 1) {
+                                        count = 2;
+                                    } else if (count == 2) {
+                                        count = 0;
+                                    } else {
+                                        count = 1;
                                     }
-                                    refpass = !refpass;
                                 }
                             }
                         }
@@ -310,6 +285,7 @@ public class Simulator {
                 System.out.println("Total Number Of Page Faults = " + faults);
                 System.out.println("Total I/O Time Units = " + scetime);
                 System.out.format("SC/SCE2 I/O Time Ratio = %.2f\n", ((float) scetime / (float) scrtime));
+                System.out.println("");
             }
         } catch (Exception e) {
             System.out.println(e.toString());

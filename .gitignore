@@ -10,3 +10,4 @@ Simulator/nbproject/private/config.properties
 *.properties
 Simulator/build/classes/.netbeans_update_resources
 Simulator/build/classes/ass2_test2.txt
+Simulator/src/Simulator.java
