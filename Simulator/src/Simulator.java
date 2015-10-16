@@ -310,6 +310,7 @@ public class Simulator {
                 System.out.println("Total Number Of Page Faults = " + faults);
                 System.out.println("Total I/O Time Units = " + scetime);
                 System.out.format("SC/SCE2 I/O Time Ratio = %.2f\n", ((float) scetime / (float) scrtime));
+                System.out.println("");
             }
         } catch (Exception e) {
             System.out.println(e.toString());
