@@ -1,0 +1,12 @@
+Simulator/build.xml
+*.netbeans_automatic_build
+Simulator/build/classes/ass2_test1.txt
+Simulator/build/classes/ass2_test3.txt
+*.class
+Simulator/manifest.mf
+Simulator/nbproject/project.xml
+*.xml
+Simulator/nbproject/private/config.properties
+*.properties
+Simulator/build/classes/.netbeans_update_resources
+Simulator/build/classes/ass2_test2.txt
